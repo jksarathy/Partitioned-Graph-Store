@@ -570,7 +570,7 @@ int main(int argc, char *argv[]) {
   fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
     port, part, ip1, ip2, ip3);
 
-  ip_list = (char **) malloc(3* sizeof(char *))
+  ip_list = (char **) malloc(3* sizeof(char *));
   ip_list[0] = ip1;
   ip_list[1] = ip2;
   ip_list[2] = ip3;

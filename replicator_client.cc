@@ -155,7 +155,7 @@ int propogate(const int op, const uint64_t node_a_id, const uint64_t node_b_id) 
     return RPC_FAILED;
   }
 
-  std::string server_address(ip_list[modulo];)
+  std::string server_address(ip_list[modulo]);
   std::cout << "Propogate created server address " << server_address << std::endl;
 
   ReplicatorClient client(grpc::CreateChannel(
