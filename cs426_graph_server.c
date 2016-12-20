@@ -549,7 +549,7 @@ int main(int argc, char *argv[]) {
   char *part3_address;
   int c;
 
-  while ((c = getopt (argc, argv, "p:l")) != -1)
+  while ((c = getopt(argc, argv, "p:l")) != -1)
     switch (c)
       {
       case 'p':
@@ -566,7 +566,8 @@ int main(int argc, char *argv[]) {
                    optopt);
         return 1;
       default:
-        abort ();
+        fprintf (stderr,"Aborting\n");
+        abort();
       }
 
   if (argc - optind != 4) {
@@ -580,6 +581,7 @@ int main(int argc, char *argv[]) {
   fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
     port, part, part1_address, part2_address, part3_address);
 
+  /*
   // Create new graph
   Graph *graph = new Graph();
 
@@ -616,6 +618,7 @@ int main(int argc, char *argv[]) {
 
   // Free 
   free(data);
+  */
 
   return 0;
 }
