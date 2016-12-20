@@ -577,7 +577,9 @@ int main(int argc, char *argv[]) {
   part1_address = argv[optind++];
   part2_address = argv[optind++];
   part3_address = argv[optind];
-  
+  fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
+    port, part, part1_address, part2_address, part3_address);
+
   // Create new graph
   Graph *graph = new Graph();
 
