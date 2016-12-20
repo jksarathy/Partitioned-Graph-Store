@@ -533,6 +533,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Parse arguments
+  char *port;
   int part;
   int c;
 
@@ -564,6 +565,7 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Incorrect number of arguments\n");
     return 1;
   }
+  
   port = argv[optind++];
   ip2 = argv[optind++];
   ip3 = argv[optind];
