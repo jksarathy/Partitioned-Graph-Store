@@ -143,10 +143,10 @@ class ReplicatorClient {
 int propogate(const int op, const uint64_t node_a_id, const uint64_t node_b_id) {
   int status = 0;
 
-  uint64_t node_id = (node_a_id < node_b_id) node_b_id : node_a_id;
+  uint64_t node_id = (node_a_id < node_b_id)? node_b_id : node_a_id;
   int modulo = node_id % 3;
 
-  if modulo == part-1 {
+  if (modulo == part-1) {
     return 200;
   }
 
