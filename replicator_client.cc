@@ -140,15 +140,15 @@ class ReplicatorClient {
   std::unique_ptr<ReplicatorService::Stub> stub_;
 };
 
-int propogate(const int op, const uint64_t node_a_id, const uint64_t node_b_id) {
+int propogate(const char *target_ip, const int op, const uint64_t node_a_id, const uint64_t node_b_id) {
   int status = 0;
 
-  if (ip_next == NULL) {
+  if (target_ip == NULL) {
     std::cout << "Error: ip_next undefined" << std::endl;
     return RPC_FAILED;
   }
 
-  std::string server_ip = ip_next;
+  std::string server_ip = target_ip;
   std::string server_address(server_ip + ":" + RPC_PORT);
 
   std::cout << "Propogate created server address " << server_address << std::endl;

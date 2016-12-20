@@ -549,10 +549,6 @@ int main(int argc, char *argv[]) {
 
   // Parse arguments
   int part;
-  char *port;
-  char *part1_address;
-  char *part2_address;
-  char *part3_address;
   int c;
 
   while ((c = getopt(argc, argv, "p:l:")) != -1)
@@ -562,7 +558,7 @@ int main(int argc, char *argv[]) {
         part = atoi(optarg);
         break;
       case 'l':
-        part1_address = optarg;
+        ip1 = optarg;
         break;
       case '?':
         if (optopt == 'p')
@@ -584,12 +580,11 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   port = argv[optind++];
-  part2_address = argv[optind++];
-  part3_address = argv[optind];
+  ip2 = argv[optind++];
+  ip3 = argv[optind];
   fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
-    port, part, part1_address, part2_address, part3_address);
+    port, part, ip1, ip2, ip3);
 
-  /*
   // Create new graph
   Graph *graph = new Graph();
 

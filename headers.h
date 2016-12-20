@@ -19,6 +19,11 @@ extern int head;
 extern int tail;
 extern char *ip_next;
 
+extern char *port;
+extern char *ip1;
+extern char *ip2;
+extern char *ip3;
+
 #ifdef __cplusplus
 	#define EXTERNC extern "C"
 #else
@@ -26,6 +31,6 @@ extern char *ip_next;
 #endif
 
 EXTERNC void *RunServer(void *);
-EXTERNC int propogate(const int, const uint64_t, const uint64_t);
+EXTERNC int propogate(const char *, const int, const uint64_t, const uint64_t);
 
 #undef EXTERNC
