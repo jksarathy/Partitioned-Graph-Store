@@ -576,7 +576,8 @@ int main(int argc, char *argv[]) {
   port = argv[optind++];
   part1_address = argv[optind++];
   part2_address = argv[optind++];
-  part3_address = argv[optind]
+  part3_address = argv[optind];
+  
   // Create new graph
   Graph *graph = new Graph();
 
