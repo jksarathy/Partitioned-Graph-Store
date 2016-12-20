@@ -134,7 +134,7 @@ class ReplicatorImpl final : public ReplicatorService::Service {
 void *RunServer(void *v) {
   char str[80];
   strcpy(str, "0.0.0.0:");
-  strcat(str, port);
+  strcat(str, rpc_port);
 
   std::string server_address(str);
   ReplicatorImpl service((Graph *) v);

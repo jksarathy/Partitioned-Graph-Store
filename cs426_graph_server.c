@@ -5,6 +5,12 @@ int head;
 int tail;
 char *ip_next;
 
+char *rpc_port;
+char **ip_list;
+char *ip1;
+char *ip2;
+char *ip3;
+
 typedef struct {
   Graph *graph;
 } Data;
@@ -32,16 +38,6 @@ static void add_node(struct mg_connection *nc, struct http_message *hm, void *us
     mg_printf(nc, "Could not find node_id in JSON\n");
     free(arr);
     return;
-  }
-
-  if (!tail) {
-    status = propogate(ADD_NODE, strtoull(tok->ptr, NULL, 10), 0);
-    if (status == RPC_FAILED) {
-      mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
-      fprintf(stderr, "add_node: %.*s = %d\n", tok->len, tok->ptr, status);
-      free(arr);
-      return;
-    }
   }
 
   status = graph->addNode(strtoull(tok->ptr, NULL, 10)); 
@@ -152,17 +148,6 @@ static void remove_node(struct mg_connection *nc, struct http_message *hm, void 
     mg_printf(nc, "Could not find node_id in JSON\n");
     free(arr);
     return;
-  }
-
-  if (!tail) {
-    fprintf(stderr, "Remove node: not tail, about to propogate\n");
-    status = propogate(REMOVE_NODE, strtoull(tok->ptr, NULL, 10), 0);
-    if (status == RPC_FAILED) {
-      mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
-      fprintf(stderr, "remove_node: %.*s = %d\n", tok->len, tok->ptr, status);
-      free(arr);
-      return;
-    }
   }
 
   status = graph->removeNode(strtoull(tok->ptr, NULL, 10)); 
@@ -585,6 +570,12 @@ int main(int argc, char *argv[]) {
   fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
     port, part, ip1, ip2, ip3);
 
+  ip_list = (char **) malloc(3* sizeof(char *))
+  ip_list[0] = ip1;
+  ip_list[1] = ip2;
+  ip_list[2] = ip3;
+  rpc_port = strchr(ip_list[part-1], ':');
+
   // Create new graph
   Graph *graph = new Graph();
 
@@ -621,6 +612,7 @@ int main(int argc, char *argv[]) {
 
   // Free 
   free(data);
+  free(ip_list);
 
   return 0;
 }
