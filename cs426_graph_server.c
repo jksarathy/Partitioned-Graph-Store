@@ -621,7 +621,6 @@ int main(int argc, char *argv[]) {
 
   // Free 
   free(data);
-  */
 
   return 0;
 }
