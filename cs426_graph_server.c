@@ -542,19 +542,21 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
 int main(int argc, char *argv[]) {
 
   // Parse arguments
+  int part;
   char *port;
-  int bflag = 0;
+  char *part1_address;
+  char *part2_address;
+  char *part3_address;
   int c;
 
-  while ((c = getopt (argc, argv, "b:")) != -1)
+  while ((c = getopt (argc, argv, "p:l")) != -1)
     switch (c)
       {
-      case 'b':
-        bflag = 1;
-        ip_next = optarg;
+      case 'p':
+        part = atoi(optarg);
         break;
       case '?':
-        if (optopt == 'b')
+        if (optopt == 'p')
           fprintf(stderr, "Option -%c requires an argument. \n", optopt);
         else if (isprint (optopt))
           fprintf(stderr, "Unknown option '-%c'.\n", optopt);
@@ -567,18 +569,14 @@ int main(int argc, char *argv[]) {
         abort ();
       }
 
-  if (argc - optind != 1) {
+  if (argc - optind != 4) {
     fprintf(stderr, "Incorrect number of arguments\n");
     return 1;
   }
-  port = argv[optind];
-
-  // Check if tail
-  if (bflag == 0) {
-    fprintf(stderr, "I am the tail! \n");
-    tail = 1;
-  }
-
+  port = argv[optind++];
+  part1_address = argv[optind++];
+  part2_address = argv[optind++];
+  part3_address = argv[optind]
   // Create new graph
   Graph *graph = new Graph();
 
