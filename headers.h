@@ -31,6 +31,6 @@ extern char *ip3;
 #endif
 
 EXTERNC void *RunServer(void *);
-EXTERNC int propogate(const char *, const int, const uint64_t, const uint64_t);
+EXTERNC int propogate(const int, const uint64_t, const uint64_t);
 
 #undef EXTERNC
