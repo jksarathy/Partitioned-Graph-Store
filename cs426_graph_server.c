@@ -541,6 +541,12 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
 
 int main(int argc, char *argv[]) {
 
+  if (argc != 8) {
+    fprintf(stderr, 
+      "Usage: ./cs426_graph_server <graph_server_port> -p <partnum> -l <partlist> \n");
+    return 1;
+  }
+
   // Parse arguments
   int part;
   char *port;
@@ -549,11 +555,14 @@ int main(int argc, char *argv[]) {
   char *part3_address;
   int c;
 
-  while ((c = getopt(argc, argv, "p:l")) != -1)
+  while ((c = getopt(argc, argv, "p:l:")) != -1)
     switch (c)
       {
       case 'p':
         part = atoi(optarg);
+        break;
+      case 'l':
+        part1_address = optarg;
         break;
       case '?':
         if (optopt == 'p')
@@ -570,12 +579,11 @@ int main(int argc, char *argv[]) {
         abort();
       }
 
-  if (argc - optind != 4) {
+  if (argc - optind != 3) {
     fprintf(stderr, "Incorrect number of arguments\n");
     return 1;
   }
   port = argv[optind++];
-  part1_address = argv[optind++];
   part2_address = argv[optind++];
   part3_address = argv[optind];
   fprintf(stderr, "Port: %s, part: %d, address1: %s, address2: %s, address3: %s\n", 
