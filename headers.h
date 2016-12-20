@@ -19,6 +19,7 @@ extern int head;
 extern int tail;
 extern char *ip_next;
 
+extern int part;
 extern char *rpc_port;
 extern char **ip_list;
 extern char *ip1;

@@ -5,6 +5,7 @@ int head;
 int tail;
 char *ip_next;
 
+int part;
 char *rpc_port;
 char **ip_list;
 char *ip1;
@@ -534,7 +535,6 @@ int main(int argc, char *argv[]) {
 
   // Parse arguments
   char *port;
-  int part;
   int c;
 
   while ((c = getopt(argc, argv, "p:l:")) != -1)

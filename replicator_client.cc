@@ -143,12 +143,12 @@ class ReplicatorClient {
 int propogate(const int op, const uint64_t node_a_id, const uint64_t node_b_id) {
   int status = 0;
 
-  if (ip_next == NULL) {
-    std::cout << "Error: ip_next undefined" << std::endl;
-    return RPC_FAILED;
-  }
+  uint64_t node_id = (node_a_id < node_b_id) node_b_id : node_a_id;
+  int modulo = node_id % 3;
 
-  int modulo = node_b_id % 3;
+  if modulo == part-1 {
+    return 200;
+  }
 
   if (ip_list[modulo] == NULL) {
     std::cout << "Error: ip address " << modulo+1 << " undefined" << std::endl;
