@@ -93,21 +93,49 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
     return;
   }
 
-  if (!tail) {
-    fprintf(stderr, "Add_edge: not tail, about to propogate \n");
-    status = propogate(ADD_EDGE, strtoull(tok->ptr, NULL, 10), strtoull(tok1->ptr, NULL, 10));
-    if (status == RPC_FAILED) {
-      mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
-      fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
-      free(arr);
-      return;
-    }
+  // Get node IDs
+  uint64_t node_a_id = strtoull(tok->ptr, NULL, 10);
+  uint64_t node_b_id = strtoull(tok1->ptr, NULL, 10);
+
+  // Neither node in this partition
+  if (node_a_id % 3 != part-1 && node_b_id % 3 != part-1) {
+    fprintf(stderr, "BAD REQUEST: Neither node is in this partition \n");
+    status = ERROR;
   }
 
-  status = graph->addEdge(strtoull(tok->ptr, NULL, 10), strtoull(tok1->ptr, NULL, 10)); 
+  // Both nodes in this partition
+  else if (node_a_id % 3 == part-1 && node_b_id % 3 == part-1) {
+    fprintf(stderr, "Both nodes in this partition \n");
+    status = graph->addEdge(node_a_id, node_b_id); 
+  }
 
-  fprintf(stderr, "Add_edge: added edge to graph\n");
+  // Exactly one node in this partition
+  else {
+    uint64_t max_node_id = (node_a_id < node_b_id)? node_b_id : node_a_id;
+    uint64_t min_node_id = (node_a_id > node_b_id)? node_b_id : node_a_id;
 
+    // I am the higher partition
+    if (max_node_id % 3 == part-1) {
+      fprintf(stderr, "Add_edge: I am the higher partition \n");
+      graph->addNode(min_node_id);
+      status = graph->addEdge(min_node_id, max_node_id); 
+    }
+  
+    // I am the lower partition
+    else {
+      fprintf(stderr, "Add_edge: I am the lower partition, about to send RPC to higher partition \n");
+      status = propogate(ADD_EDGE, min_node_id, max_node_id);
+      if (status == RPC_FAILED) {
+        mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
+        fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
+        free(arr);
+        return;
+      }
+      graph->addNode(max_node_id);
+      status = graph->addEdge(min_node_id, max_node_id); 
+    }
+
+  } 
   //DEBUG
   fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status); 
 

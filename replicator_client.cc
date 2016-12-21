@@ -147,6 +147,7 @@ int propogate(const int op, const uint64_t node_a_id, const uint64_t node_b_id) 
   int modulo = node_id % 3;
 
   if (modulo == part-1) {
+    std::cout << "Propogate received RPC request even though you are the higher partition" << std::endl;
     return 200;
   }
 
