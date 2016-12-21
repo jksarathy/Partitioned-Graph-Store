@@ -133,7 +133,7 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
       if (!in_graph) {
         status = EXISTS;
         fprintf(stderr, "Add_edge: lower node doesn't exist \n");
-        mg_printf(nc, "HTTP/1.1 204 OK\r\n");
+        mg_printf(nc, "HTTP/1.1 400 Bad Request\r\n");
         fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
         free(arr);
         return;
@@ -147,8 +147,11 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
         free(arr);
         return;
       }
-      graph->addNode(max_node_id);
-      status = graph->addEdge(min_node_id, max_node_id); 
+
+      if (status == SUCCESS) {
+        graph->addNode(max_node_id);
+        status = graph->addEdge(min_node_id, max_node_id); 
+      }
     }
   } 
 
@@ -288,7 +291,7 @@ static void remove_edge(struct mg_connection *nc, struct http_message *hm, void 
       if (!in_graph) {
         status = EXISTS;
         fprintf(stderr, "Remove_edge: lower node doesn't exist \n");
-        mg_printf(nc, "HTTP/1.1 204 OK\r\n");
+        mg_printf(nc, "HTTP/1.1 400 Bad Request\r\n");
         fprintf(stderr, "remove_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
         free(arr);
         return;
@@ -301,6 +304,7 @@ static void remove_edge(struct mg_connection *nc, struct http_message *hm, void 
         free(arr);
         return;
       }
+      
       status = graph->removeEdge(min_node_id, max_node_id); 
     }
 
