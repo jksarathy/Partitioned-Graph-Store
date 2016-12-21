@@ -52,26 +52,36 @@ class ReplicatorImpl final : public ReplicatorService::Service {
   }
 
   Status AddNode(ServerContext* context, const Node* node, Ack *ack) override {
+    pthread_mutex_lock(&mutex);
+
     std::cout << "RPC Server " << part << " adding node: " << node->node_id() << std::endl;
 
     int status;
 
     status = graph->addNode(node->node_id());
     ack->set_status(status);
+
+    pthread_mutex_unlock(&mutex);
     return Status::OK;
   }
 
   Status RemoveNode(ServerContext* context, const Node* node, Ack *ack) override {
+    pthread_mutex_lock(&mutex);
+
     std::cout << "RPC Server " << part << " removing node: " << node->node_id() << std::endl;
 
     int status;
 
     status = graph->removeNode(node->node_id());
     ack->set_status(status);
+
+    pthread_mutex_unlock(&mutex);
     return Status::OK;
   }
 
   Status AddEdge(ServerContext* context, const Edge* edge, Ack *ack) override {
+    pthread_mutex_lock(&mutex);
+
     std::cout << "RPC Server " << part << " adding edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
 
     int status;
@@ -88,16 +98,22 @@ class ReplicatorImpl final : public ReplicatorService::Service {
 
     status = graph->addEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);
+
+    pthread_mutex_unlock(&mutex);
     return Status::OK;
   }
 
   Status RemoveEdge(ServerContext* context, const Edge* edge, Ack *ack) override {
+    pthread_mutex_lock(&mutex);
+
     std::cout << "RPC Server " << part << " removing edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
 
     int status;
 
     status = graph->removeEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);
+
+    pthread_mutex_unlock(&mutex);
     return Status::OK;
   }
 

@@ -26,6 +26,8 @@ extern char *ip1;
 extern char *ip2;
 extern char *ip3;
 
+extern pthread_mutex_t mutex;
+
 #ifdef __cplusplus
 	#define EXTERNC extern "C"
 #else

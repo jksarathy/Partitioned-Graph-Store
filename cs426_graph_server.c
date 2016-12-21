@@ -12,6 +12,8 @@ char *ip1;
 char *ip2;
 char *ip3;
 
+pthread_mutex_t mutex;
+
 typedef struct {
   Graph *graph;
 } Data;
@@ -594,6 +596,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     struct http_message *hm = (struct http_message *) ev_data;
     struct mg_str *uri = &(hm->uri);
 
+    pthread_mutex_lock(&mutex);
+
     if (mg_vcmp(uri, "/api/v1/add_node") == 0) {
       add_node(nc, hm, nc->mgr->user_data);
     } else if (mg_vcmp(uri, "/api/v1/add_edge") == 0) {
@@ -613,6 +617,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     } else {
       mg_printf(nc, "HTTP/1.1 404 Not Found\r\n");
     }
+
+    pthread_mutex_unlock(&mutex); 
 
     nc->flags |= MG_F_SEND_AND_CLOSE;
   }
