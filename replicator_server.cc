@@ -76,7 +76,16 @@ class ReplicatorImpl final : public ReplicatorService::Service {
 
     int status;
 
-    graph->addNode(edge->node_a().node_id());
+    // Check if this partition has higher node
+    std::pair<int, bool> result;
+    result = graph->getNode(edge->node_b().node_id());
+    bool in_graph = std::get<1>(result);
+
+    // Only add lower node if higher node existed
+    if (in_graph) {
+      graph->addNode(edge->node_a().node_id());
+    }
+
     status = graph->addEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);
     return Status::OK;

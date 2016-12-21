@@ -123,8 +123,25 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
     // I am the lower partition
     else {
       fprintf(stderr, "Add_edge: I am the lower partition, about to send RPC to higher partition \n");
+      
+      // Check if this partition has lower node
+      std::pair<int, bool> result;
+      result = graph->getNode(min_node_id);
+      bool in_graph = std::get<1>(result);
+
+      // If lower node doesn't exist, return
+      if (!in_graph) {
+        status = EXISTS;
+        fprintf(stderr, "Add_edge: lower node doesn't exist \n");
+        mg_printf(nc, "HTTP/1.1 204 OK\r\n");
+        fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
+        free(arr);
+        return;
+      }
+
       status = propogate(ADD_EDGE, min_node_id, max_node_id);
       if (status == RPC_FAILED) {
+        fprintf(stderr, "Add_edge: RPC failed \n");
         mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
         fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
         free(arr);
@@ -261,6 +278,22 @@ static void remove_edge(struct mg_connection *nc, struct http_message *hm, void 
     // I am the lower partition
     else {
       fprintf(stderr, "Remove_edge: I am the lower partition, about to send RPC to higher partition \n");
+
+      // Check if this partition has lower node
+      std::pair<int, bool> result;
+      result = graph->getNode(min_node_id);
+      bool in_graph = std::get<1>(result);
+
+      // If lower node doesn't exist, return
+      if (!in_graph) {
+        status = EXISTS;
+        fprintf(stderr, "Remove_edge: lower node doesn't exist \n");
+        mg_printf(nc, "HTTP/1.1 204 OK\r\n");
+        fprintf(stderr, "remove_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
+        free(arr);
+        return;
+      }
+
       status = propogate(REMOVE_EDGE, min_node_id, max_node_id);
       if (status == RPC_FAILED) {
         mg_printf(nc, "HTTP/1.1 500 RPC Failed\r\n");
