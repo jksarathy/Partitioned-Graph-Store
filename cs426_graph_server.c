@@ -111,8 +111,8 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
 
   // Exactly one node in this partition
   else {
-    uint64_t max_node_id = (node_a_id < node_b_id)? node_b_id : node_a_id;
-    uint64_t min_node_id = (node_a_id > node_b_id)? node_b_id : node_a_id;
+    uint64_t max_node_id = ((node_a_id % 3) < (node_b_id % 3))? node_b_id : node_a_id;
+    uint64_t min_node_id = ((node_a_id % 3) > (node_b_id % 3))? node_b_id : node_a_id;
 
     // I am the higher partition
     if (max_node_id % 3 == part-1) {
@@ -131,7 +131,7 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
 
       // If lower node doesn't exist, return
       if (!in_graph) {
-        status = EXISTS;
+        status = ERROR;
         fprintf(stderr, "Add_edge: lower node doesn't exist \n");
         mg_printf(nc, "HTTP/1.1 400 Bad Request\r\n");
         fprintf(stderr, "add_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
@@ -269,8 +269,8 @@ static void remove_edge(struct mg_connection *nc, struct http_message *hm, void 
 
   // Exactly one node in this partition
   else {
-    uint64_t max_node_id = (node_a_id < node_b_id)? node_b_id : node_a_id;
-    uint64_t min_node_id = (node_a_id > node_b_id)? node_b_id : node_a_id;
+    uint64_t max_node_id = ((node_a_id % 3) < (node_b_id % 3))? node_b_id : node_a_id;
+    uint64_t min_node_id = ((node_a_id % 3) > (node_b_id % 3))? node_b_id : node_a_id;
 
     // I am the higher partition
     if (max_node_id % 3 == part-1) {
@@ -289,7 +289,7 @@ static void remove_edge(struct mg_connection *nc, struct http_message *hm, void 
 
       // If lower node doesn't exist, return
       if (!in_graph) {
-        status = EXISTS;
+        status = ERROR;
         fprintf(stderr, "Remove_edge: lower node doesn't exist \n");
         mg_printf(nc, "HTTP/1.1 400 Bad Request\r\n");
         fprintf(stderr, "remove_edge: %.*s, %.*s = %d\n", tok->len, tok->ptr, tok1->len, tok1->ptr, status);
