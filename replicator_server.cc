@@ -52,18 +52,9 @@ class ReplicatorImpl final : public ReplicatorService::Service {
   }
 
   Status AddNode(ServerContext* context, const Node* node, Ack *ack) override {
-    std::cout << "Server adding node: " << node->node_id() << std::endl;
+    std::cout << "RPC Server " << part << " adding node: " << node->node_id() << std::endl;
 
     int status;
-
-    if (!tail) {
-      std::cout << "Server not tail, propogating add node" << std::endl;
-      status = propogate(ADD_NODE, node->node_id(), 0);
-      if (status == RPC_FAILED) {
-        ack->set_status(status);
-        return Status::OK;
-      }
-    }
 
     status = graph->addNode(node->node_id());
     ack->set_status(status);
@@ -71,18 +62,9 @@ class ReplicatorImpl final : public ReplicatorService::Service {
   }
 
   Status RemoveNode(ServerContext* context, const Node* node, Ack *ack) override {
-    std::cout << "Server removing node: " << node->node_id() << std::endl;
+    std::cout << "RPC Server " << part << " removing node: " << node->node_id() << std::endl;
 
     int status;
-
-    if (!tail) {
-      std::cout << "Server not tail, propogating remove node" << std::endl;
-      status = propogate(REMOVE_NODE, node->node_id(), 0);
-      if (status == RPC_FAILED) {
-        ack->set_status(status);
-        return Status::OK;
-      }
-    }
 
     status = graph->removeNode(node->node_id());
     ack->set_status(status);
@@ -90,37 +72,20 @@ class ReplicatorImpl final : public ReplicatorService::Service {
   }
 
   Status AddEdge(ServerContext* context, const Edge* edge, Ack *ack) override {
-    std::cout << "Server adding edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
+    std::cout << "RPC Server " << part << " adding edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
 
     int status;
 
-    if (!tail) {
-      std::cout << "Server not tail, propogating add edge" << std::endl;
-      status = propogate(ADD_EDGE, edge->node_a().node_id(), edge->node_b().node_id());
-      if (status == RPC_FAILED) {
-        ack->set_status(status);
-        return Status::OK;
-      }
-    }
-
+    graph->addNode(edge->node_a().node_id())
     status = graph->addEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);
     return Status::OK;
   }
 
   Status RemoveEdge(ServerContext* context, const Edge* edge, Ack *ack) override {
-    std::cout << "Server removing edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
+    std::cout << "RPC Server " << part << " removing edge: " << edge->node_a().node_id() << ", " << edge->node_b().node_id() << std::endl;
 
     int status;
-
-    if (!tail) {
-      std::cout << "Server not tail, propogating remove edge" << std::endl;
-      status = propogate(REMOVE_EDGE, edge->node_a().node_id(), edge->node_b().node_id());
-      if (status == RPC_FAILED) {
-        ack->set_status(status);
-        return Status::OK;
-      }
-    }
 
     status = graph->removeEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);

@@ -116,9 +116,8 @@ static void add_edge(struct mg_connection *nc, struct http_message *hm, void *us
 
     // I am the higher partition
     if (max_node_id % 3 == part-1) {
-      fprintf(stderr, "Add_edge: I am the higher partition \n");
-      graph->addNode(min_node_id);
-      status = graph->addEdge(min_node_id, max_node_id); 
+      fprintf(stderr, "BAD REQUEST: Request sent to higher partition \n");
+      status = ERROR; 
     }
   
     // I am the lower partition
