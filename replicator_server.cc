@@ -76,7 +76,7 @@ class ReplicatorImpl final : public ReplicatorService::Service {
 
     int status;
 
-    graph->addNode(edge->node_a().node_id())
+    graph->addNode(edge->node_a().node_id());
     status = graph->addEdge(edge->node_a().node_id(), edge->node_b().node_id());
     ack->set_status(status);
     return Status::OK;
